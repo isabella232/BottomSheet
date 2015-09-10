@@ -15,7 +15,8 @@
         <attr name="bs_moreText" format="string"/>
         <attr name="bs_closeDrawable" format="reference"/>
         <attr name="bs_collapseListIcons" format="boolean"/>
-        <attr name="bs_ttfFont" format="string"/>
+        <attr name="bs_ttfPrimaryFont" format="string"/>
+        <attr name="bs_ttfTitleFont" format="string"/>
     </declare-styleable>
 
 </resources>
