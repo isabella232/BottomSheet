@@ -136,7 +136,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
             }
             String typefaceTitleName = a.getString(R.styleable.BottomSheet_bs_ttfTitleFont);
             if (!TextUtils.isEmpty(typefaceTitleName)) {
-                typefaceTitleName = String.format("fonts/%s.ttf", typefacePrimaryName);
+                typefaceTitleName = String.format("fonts/%s.ttf", typefaceTitleName);
                 try {
                     typefaceTitle = Typeface.createFromAsset(getContext().getAssets(), typefaceTitleName);
                 } catch (Exception e) {
