@@ -414,8 +414,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
                         convertView = inflater.inflate(R.layout.bs_list_entry, parent, false);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.bs_list_title);
-                    if (typefaceTitle != null) {
-                        holder.title.setTypeface(typefaceTitle);
+                    if (typefacePrimary != null) {
+                        holder.title.setTypeface(typefacePrimary);
                     }
                     holder.image = (ImageView) convertView.findViewById(R.id.bs_list_image);
                     convertView.setTag(holder);
