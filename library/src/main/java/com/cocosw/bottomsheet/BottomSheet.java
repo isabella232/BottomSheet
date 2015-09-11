@@ -106,7 +106,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
     private ActionMenu menuItem;
     private ActionMenu actions;
     private OnDismissListener dismissListener;
-    private Typeface typeface;
+    private Typeface typefacePrimary;
+    private Typeface typefaceTitle;
 
     BottomSheet(Context context) {
         super(context, R.style.BottomSheet_Dialog);
@@ -124,13 +125,22 @@ public class BottomSheet extends Dialog implements DialogInterface {
             moreText = a.getString(R.styleable.BottomSheet_bs_moreText);
             collapseListIcons = a.getBoolean(R.styleable.BottomSheet_bs_collapseListIcons, true);
 
-            String typefaceName = a.getString(R.styleable.BottomSheet_bs_ttfFont);
-            if (!TextUtils.isEmpty(typefaceName)) {
-                typefaceName = String.format("fonts/%s.ttf", typefaceName);
+            String typefacePrimaryName = a.getString(R.styleable.BottomSheet_bs_ttfPrimaryFont);
+            if (!TextUtils.isEmpty(typefacePrimaryName)) {
+                typefacePrimaryName = String.format("fonts/%s.ttf", typefacePrimaryName);
                 try {
-                    typeface = Typeface.createFromAsset(getContext().getAssets(), typefaceName);
+                    typefacePrimary = Typeface.createFromAsset(getContext().getAssets(), typefacePrimaryName);
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Unable to open font file: " + typefaceName);
+                    throw new IllegalArgumentException("Unable to open font file: " + typefacePrimaryName);
+                }
+            }
+            String typefaceTitleName = a.getString(R.styleable.BottomSheet_bs_ttfTitleFont);
+            if (!TextUtils.isEmpty(typefaceTitleName)) {
+                typefaceTitleName = String.format("fonts/%s.ttf", typefaceTitleName);
+                try {
+                    typefaceTitle = Typeface.createFromAsset(getContext().getAssets(), typefaceTitleName);
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Unable to open font file: " + typefaceTitleName);
                 }
             }
         } finally {
@@ -318,8 +328,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
         if (builder.title != null) {
             title.setVisibility(View.VISIBLE);
             title.setText(builder.title);
-            if (typeface != null) {
-                title.setTypeface(typeface);
+            if (typefaceTitle != null) {
+                title.setTypeface(typefaceTitle);
             }
         }
 
@@ -404,8 +414,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
                         convertView = inflater.inflate(R.layout.bs_list_entry, parent, false);
                     holder = new ViewHolder();
                     holder.title = (TextView) convertView.findViewById(R.id.bs_list_title);
-                    if (typeface != null) {
-                        holder.title.setTypeface(typeface);
+                    if (typefacePrimary != null) {
+                        holder.title.setTypeface(typefacePrimary);
                     }
                     holder.image = (ImageView) convertView.findViewById(R.id.bs_list_image);
                     convertView.setTag(holder);
@@ -440,7 +450,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
             }
         };
 
-        adapter = new SimpleSectionedGridAdapter(context, baseAdapter, R.layout.bs_list_divider, R.id.headerlayout, R.id.header, typeface);
+        adapter = new SimpleSectionedGridAdapter(context, baseAdapter, R.layout.bs_list_divider, R.id.headerlayout, R.id.header, typefacePrimary);
         list.setAdapter(adapter);
         adapter.setGridView(list);
 
