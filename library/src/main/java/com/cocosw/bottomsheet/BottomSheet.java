@@ -288,8 +288,9 @@ public class BottomSheet extends Dialog implements DialogInterface {
         setCanceledOnTouchOutside(cancelOnTouchOutside);
         final ClosableSlidingLayout mDialogView = (ClosableSlidingLayout) View.inflate(context, R.layout.bottom_sheet_dialog, null);
         setContentView(mDialogView);
-        if (!cancelOnSwipeDown)
+        if (!cancelOnSwipeDown) {
             mDialogView.swipeable = cancelOnSwipeDown;
+        }
         mDialogView.setSlideListener(new ClosableSlidingLayout.SlideListener() {
             @Override
             public void onClosed() {
@@ -450,15 +451,29 @@ public class BottomSheet extends Dialog implements DialogInterface {
             }
         };
 
-        adapter = new SimpleSectionedGridAdapter(context, baseAdapter, R.layout.bs_list_divider, R.id.headerlayout, R.id.header, typefacePrimary);
-        list.setAdapter(adapter);
-        adapter.setGridView(list);
+        if (builder.customViewAdapter != null) {
+            adapter = new SimpleSectionedGridAdapter(context, builder.customViewAdapter, R.layout.bs_list_divider, R.id.headerlayout, R.id.header, typefacePrimary);
+            list.setAdapter(adapter);
+            adapter.setGridView(list);
+        } else {
+            adapter = new SimpleSectionedGridAdapter(context, baseAdapter, R.layout.bs_list_divider, R.id.headerlayout, R.id.header, typefacePrimary);
+            list.setAdapter(adapter);
+            adapter.setGridView(list);
 
-        updateSection();
+            updateSection();
+        }
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (builder.customViewAdapter != null) {
+                    if (builder.listener != null) {
+                        builder.listener.onClick(BottomSheet.this, (int) builder.customViewAdapter.getItemId(position));
+                    }
+                    dismiss();
+                    return;
+                }
+
                 if (((MenuItem) adapter.getItem(position)).getItemId() == R.id.bs_more) {
                     showFullItems();
                     mDialogView.setCollapsible(false);
@@ -466,8 +481,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
                 }
 
                 if (!((ActionMenuItem) adapter.getItem(position)).invoke()) {
-                    if (builder.menulistener != null)
-                        builder.menulistener.onMenuItemClick((MenuItem) adapter.getItem(position));
+                    if (builder.menuListener != null)
+                        builder.menuListener.onMenuItemClick((MenuItem) adapter.getItem(position));
                     else if (builder.listener != null)
                         builder.listener.onClick(BottomSheet.this, ((MenuItem) adapter.getItem(position)).getItemId());
                 }
@@ -641,7 +656,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
         private OnDismissListener dismissListener;
         private Drawable icon;
         private int limit = -1;
-        private MenuItem.OnMenuItemClickListener menulistener;
+        private MenuItem.OnMenuItemClickListener menuListener;
+        private BaseAdapter customViewAdapter;
 
 
         /**
@@ -800,7 +816,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
          * @return This Builder object to allow for chaining of calls to set methods
          */
         public Builder listener(@NonNull MenuItem.OnMenuItemClickListener listener) {
-            this.menulistener = listener;
+            this.menuListener = listener;
             return this;
         }
 
@@ -883,7 +899,18 @@ public class BottomSheet extends Dialog implements DialogInterface {
             this.dismissListener = listener;
             return this;
         }
+
+        /**
+         * Caller of this method declares that all view provisioning for the bottom sheet is taken
+         * care in the adapter passed for reference. Title and OnClickListener will still be honored.
+         * However OnMenuClickListener is ignored, as this is no longer a list of MenuItems
+         *
+         * @param adapter BaseAdapter which provides view rendering for the Bottom Sheet
+         * @return This Builder object to allow for chaining of calls to set methods
+         */
+        public Builder setCustomItemView(BaseAdapter adapter) {
+            this.customViewAdapter = adapter;
+            return this;
+        }
     }
-
-
 }
