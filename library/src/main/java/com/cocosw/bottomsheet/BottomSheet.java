@@ -108,6 +108,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
     private OnDismissListener dismissListener;
     private Typeface typefacePrimary;
     private Typeface typefaceTitle;
+    private int maxListHeight; //currently not used, would be great if we could control that
 
     BottomSheet(Context context) {
         super(context, R.style.BottomSheet_Dialog);
@@ -124,6 +125,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
             close = a.getDrawable(R.styleable.BottomSheet_bs_closeDrawable);
             moreText = a.getString(R.styleable.BottomSheet_bs_moreText);
             collapseListIcons = a.getBoolean(R.styleable.BottomSheet_bs_collapseListIcons, true);
+            maxListHeight = a.getDimensionPixelOffset(R.styleable.BottomSheet_bs_maxListHeight, Integer.MAX_VALUE);
 
             String typefacePrimaryName = a.getString(R.styleable.BottomSheet_bs_ttfPrimaryFont);
             if (!TextUtils.isEmpty(typefacePrimaryName)) {
@@ -467,10 +469,16 @@ public class BottomSheet extends Dialog implements DialogInterface {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (builder.customViewAdapter != null) {
+                    if (builder.customClickListener != null) {
+                        if (builder.customClickListener.onItemClicked(builder.customViewAdapter.getItem(position))) {
+                            dismiss();
+                            return;
+                        }
+                    }
                     if (builder.listener != null) {
                         builder.listener.onClick(BottomSheet.this, (int) builder.customViewAdapter.getItemId(position));
+                        dismiss();
                     }
-                    dismiss();
                     return;
                 }
 
@@ -632,7 +640,9 @@ public class BottomSheet extends Dialog implements DialogInterface {
      * If you make any changes to menu and try to apply it immediately to your bottomsheet, you should call this.
      */
     public void invalidate() {
-        updateSection();
+        if (builder.customViewAdapter == null) {
+            updateSection();
+        }
         adapter.notifyDataSetChanged();
         setListLayout();
     }
@@ -658,6 +668,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
         private int limit = -1;
         private MenuItem.OnMenuItemClickListener menuListener;
         private BaseAdapter customViewAdapter;
+        private CustomOnClickListener customClickListener;
 
 
         /**
@@ -908,9 +919,24 @@ public class BottomSheet extends Dialog implements DialogInterface {
          * @param adapter BaseAdapter which provides view rendering for the Bottom Sheet
          * @return This Builder object to allow for chaining of calls to set methods
          */
-        public Builder setCustomItemView(BaseAdapter adapter) {
+        public Builder setCustomViewAdapter(BaseAdapter adapter) {
             this.customViewAdapter = adapter;
             return this;
         }
+
+        /**
+         * OnItemClickListener for custom View Adapter, it returns the object from adapter.getItem(position)
+         *
+         * @param listener Parametrized listener for list row click
+         * @return This Builder object to allow for chaining of calls to set methods
+         */
+        public Builder setCustomOnClickListener(CustomOnClickListener listener) {
+            this.customClickListener = listener;
+            return this;
+        }
+    }
+
+    public interface CustomOnClickListener<D> {
+        boolean onItemClicked(D item);
     }
 }
