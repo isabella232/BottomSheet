@@ -108,7 +108,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
     private OnDismissListener dismissListener;
     private Typeface typefacePrimary;
     private Typeface typefaceTitle;
-    private int maxListHeight; //currently not used, would be great if we could control that
+    private int maxListHeight;
 
     BottomSheet(Context context) {
         super(context, R.style.BottomSheet_Dialog);
@@ -340,6 +340,9 @@ public class BottomSheet extends Dialog implements DialogInterface {
 
 
         list = (GridView) mDialogView.findViewById(R.id.bottom_sheet_gridview);
+        if (maxListHeight < Integer.MAX_VALUE) {
+            list.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, maxListHeight));
+        }
         mDialogView.mTarget = list;
         if (!builder.grid) {
             list.setNumColumns(1);
@@ -581,7 +584,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
                 }
                 View lastChild = list.getChildAt(list.getChildCount() - 1);
                 if (lastChild != null)
-                    list.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, lastChild.getBottom() + lastChild.getPaddingBottom() + list.getPaddingBottom()));
+                    list.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            lastChild.getBottom() + lastChild.getPaddingBottom() + list.getPaddingBottom()));
             }
         });
     }
