@@ -118,16 +118,15 @@ public class BottomSheet extends Dialog implements DialogInterface {
     BottomSheet(Context context, int theme) {
         super(context, theme);
 
-        TypedArray a = getContext()
-                .obtainStyledAttributes(null, R.styleable.BottomSheet, R.attr.bottomSheetStyle, 0);
+        TypedArray a = getContext().obtainStyledAttributes(null, R.styleable.BottomSheetDialog, R.attr.bs_DialogStyle, 0);
         try {
-            more = a.getDrawable(R.styleable.BottomSheet_bs_moreDrawable);
-            close = a.getDrawable(R.styleable.BottomSheet_bs_closeDrawable);
-            moreText = a.getString(R.styleable.BottomSheet_bs_moreText);
-            collapseListIcons = a.getBoolean(R.styleable.BottomSheet_bs_collapseListIcons, true);
-            maxListHeight = a.getDimensionPixelOffset(R.styleable.BottomSheet_bs_maxListHeight, Integer.MAX_VALUE);
+            more = a.getDrawable(R.styleable.BottomSheetDialog_bs_moreDrawable);
+            close = a.getDrawable(R.styleable.BottomSheetDialog_bs_closeDrawable);
+            moreText = a.getString(R.styleable.BottomSheetDialog_bs_moreText);
+            collapseListIcons = a.getBoolean(R.styleable.BottomSheetDialog_bs_collapseListIcons, true);
+            maxListHeight = a.getDimensionPixelOffset(R.styleable.BottomSheetDialog_bs_maxListHeight, Integer.MAX_VALUE);
 
-            String typefacePrimaryName = a.getString(R.styleable.BottomSheet_bs_ttfPrimaryFont);
+            String typefacePrimaryName = a.getString(R.styleable.BottomSheetDialog_bs_ttfPrimaryFont);
             if (!TextUtils.isEmpty(typefacePrimaryName)) {
                 typefacePrimaryName = String.format("fonts/%s.ttf", typefacePrimaryName);
                 try {
@@ -136,7 +135,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
                     throw new IllegalArgumentException("Unable to open font file: " + typefacePrimaryName);
                 }
             }
-            String typefaceTitleName = a.getString(R.styleable.BottomSheet_bs_ttfTitleFont);
+            String typefaceTitleName = a.getString(R.styleable.BottomSheetDialog_bs_ttfTitleFont);
             if (!TextUtils.isEmpty(typefaceTitleName)) {
                 typefaceTitleName = String.format("fonts/%s.ttf", typefaceTitleName);
                 try {
@@ -682,7 +681,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
          */
         public Builder(@NonNull Activity context) {
             this(context, R.style.BottomSheet_Dialog);
-            TypedArray ta = context.getTheme().obtainStyledAttributes(new int[]{R.attr.bottomSheetStyle});
+            TypedArray ta = context.getTheme().obtainStyledAttributes(new int[]{R.attr.bs_DialogStyle});
             try {
                 theme = ta.getResourceId(0, R.style.BottomSheet_Dialog);
             } finally {
