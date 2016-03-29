@@ -17,7 +17,7 @@
         <attr name="bs_collapseListIcons" format="boolean"/>
         <attr name="bs_ttfPrimaryFont" format="string"/>
         <attr name="bs_ttfTitleFont" format="string"/>
-        <attr name="bs_maxListHeight" format="dimension"/>
+        <attr name="bs_topSheetPadding" format="dimension"/>
     </declare-styleable>
 
 </resources>

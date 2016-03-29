@@ -108,7 +108,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
     private OnDismissListener dismissListener;
     private Typeface typefacePrimary;
     private Typeface typefaceTitle;
-    private int maxListHeight;
+    private int topSheetPadding;
 
     BottomSheet(Context context) {
         super(context, R.style.BottomSheet_Dialog);
@@ -124,7 +124,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
             close = a.getDrawable(R.styleable.BottomSheetDialog_bs_closeDrawable);
             moreText = a.getString(R.styleable.BottomSheetDialog_bs_moreText);
             collapseListIcons = a.getBoolean(R.styleable.BottomSheetDialog_bs_collapseListIcons, true);
-            maxListHeight = a.getDimensionPixelOffset(R.styleable.BottomSheetDialog_bs_maxListHeight, Integer.MAX_VALUE);
+            topSheetPadding = a.getDimensionPixelOffset(R.styleable.BottomSheetDialog_bs_topSheetPadding, Integer.MAX_VALUE);
 
             String typefacePrimaryName = a.getString(R.styleable.BottomSheetDialog_bs_ttfPrimaryFont);
             if (!TextUtils.isEmpty(typefacePrimaryName)) {
@@ -320,8 +320,9 @@ public class BottomSheet extends Dialog implements DialogInterface {
         });
         int[] location = new int[2];
         mDialogView.getLocationOnScreen(location);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (topSheetPadding < Integer.MAX_VALUE) {
+            mDialogView.setPadding(0, mStatusBarHeight + topSheetPadding, 0, 0);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mDialogView.setPadding(0, location[0] == 0 ? mStatusBarHeight : 0, 0, 0);
             mDialogView.getChildAt(0).setPadding(0, 0, 0, mNavBarAvailable ? getNavigationBarHeight(getContext()) + mDialogView.getPaddingBottom() : 0);
         }
@@ -339,9 +340,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
 
 
         list = (GridView) mDialogView.findViewById(R.id.bottom_sheet_gridview);
-        if (maxListHeight < Integer.MAX_VALUE) {
-            list.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, maxListHeight));
-        }
+
         mDialogView.mTarget = list;
         if (!builder.grid) {
             list.setNumColumns(1);
