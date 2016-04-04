@@ -74,7 +74,7 @@
     </style>
 
     <style name="BottomSheet.Title">
-        <item name="android:singleLine">true</item>
+        <item name="android:singleLine">?bs_singleLine</item>
         <item name="android:minHeight">56dp</item>
         <item name="android:layout_marginLeft">?bs_wellMargin</item>
         <item name="android:layout_marginRight">?bs_wellMargin</item>

@@ -3,20 +3,21 @@
 
     <declare-styleable name="BottomSheetDialog">
         <attr name="bs_DialogStyle" format="reference"/>
-        <attr name="bs_dialogBackground" format="color|reference" />
+        <attr name="bs_dialogBackground" format="color|reference"/>
         <attr name="bs_listStyle" format="reference"/>
-        <attr name="bs_dividerColor" format="color|reference" />
+        <attr name="bs_dividerColor" format="color|reference"/>
         <attr name="bs_numColumns" format="integer"/>
         <attr name="bs_wellMargin" format="dimension"/>
-        <attr name="bs_titleTextAppearance" format="reference" />
-        <attr name="bs_listItemTitleTextAppearance" format="reference" />
-        <attr name="bs_gridItemTitleTextAppearance" format="reference" />
+        <attr name="bs_singleLine" format="boolean"/>
+        <attr name="bs_titleTextAppearance" format="reference"/>
+        <attr name="bs_ttfTitleFont" format="string"/>
+        <attr name="bs_listItemTitleTextAppearance" format="reference"/>
+        <attr name="bs_gridItemTitleTextAppearance" format="reference"/>
         <attr name="bs_moreDrawable" format="reference"/>
         <attr name="bs_moreText" format="string"/>
         <attr name="bs_closeDrawable" format="reference"/>
         <attr name="bs_collapseListIcons" format="boolean"/>
         <attr name="bs_ttfPrimaryFont" format="string"/>
-        <attr name="bs_ttfTitleFont" format="string"/>
         <attr name="bs_topSheetPadding" format="dimension"/>
     </declare-styleable>
 
